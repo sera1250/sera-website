@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SERA1250.EXE">
+    <meta name="keywords" content="SERA1250.EXE">
+    <meta name="author" content="sera1250">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="SERA1250.EXE">
+    <meta property="og:description" content="SERA1250.EXE">
+    <meta property="og:url" content="https://sera1250.com">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="SERA1250.EXE">
+    <meta property="twitter:description" content="SERA1250.EXE">
+    
+    <title>SERA1250.EXE</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Fira+Code:wght@300;400;500;700&display=swap');
+
+        :root {
+            --background: #0c0c0c;
+            --background-secondary: #1a1a1a;
+            --text: #00FFFF;
+            --text-secondary: #00FFFF;
+            --text-dim: #00FFFF;
+            --accent1: #00FFFF;
+            --accent2: #00FFFF;
+            --accent3: #00FFFF;
+            --border: #333333;
+            --prompt-color: #00FFFF;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            line-height: 1.4;
+        }
+
+        header {
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            background-color: var(--background);
+        }
+
+        .header-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .content-screen {
+            flex-grow: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 1.5rem;
+            line-height: 1.1;
+            font-size: 1rem;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent1) var(--background-secondary);
+        }
+        
+        .content-screen::-webkit-scrollbar { width: 8px; }
+        .content-screen::-webkit-scrollbar-track { background: var(--background-secondary); }
+        .content-screen::-webkit-scrollbar-thumb { 
+            background: var(--accent1); 
+            border-radius: 4px;
+        }
+
+        .prompt {
+            display: flex;
+            align-items: center;
+        }
+
+        .prompt::before {
+            content: 'guest@sera1250:~$';
+            color: var(--prompt-color);
+            margin-right: 0.5rem;
+            font-weight: 400;
+        }
+        
+        .input-line {
+            display: flex;
+            padding: 0.5rem 1.5rem;
+            background-color: var(--background);
+            border-top: 1px solid var(--border);
+        }
+        
+        #command-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-family: inherit;
+            font-size: inherit;
+            flex-grow: 1;
+            max-width: calc(100% - 20px);
+            min-height: 1.2em;
+            height: auto;
+            resize: none;
+            overflow: hidden;
+        }
+
+        .cursor {
+            width: 9px;
+            height: 1.2em;
+            background-color: var(--text);
+            animation: blink 1s step-end infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            50% { 
+                background-color: transparent; 
+            }
+        }
+
+        footer {
+            padding: 0.75rem 1.5rem;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            background-color: var(--background);
+            pointer-events: auto; /* フッターもクリック可能 */
+        }
+        
+        footer * {
+            pointer-events: auto; /* フッター内のすべての要素もクリック可能 */
+        }
+        
+        @media (max-width: 768px) {
+            footer {
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        .nav-button {
+            background: transparent;
+            border: 1px solid var(--text);
+            color: var(--text);
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 400;
+            margin: 0.2rem;
+        }
+        .nav-button:hover {
+            background-color: var(--text);
+            color: var(--background);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        
+        .ascii-art {
+            white-space: pre;
+            font-size: 0.9rem;
+            line-height: 1.1;
+            color: var(--text-secondary);
+            font-family: 'Courier New', 'Lucida Console', monospace;
+            letter-spacing: 0;
+            word-spacing: 0;
+            -webkit-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            font-variant-ligatures: none;
+            -webkit-font-feature-settings: "liga" 0;
+            font-feature-settings: "liga" 0;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .dancing-dog {
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+            font-size: 0.6rem;
+            line-height: 0.9;
+            margin-left: 0.5rem;
+            white-space: pre;
+        }
+        
+        .dog-frame {
+            animation: dogDance 0.8s infinite;
+        }
+        
+        @keyframes dogDance {
+            0%, 100% { 
+                transform: translateY(0px) scale(1);
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-1px) scale(1.05);
+                opacity: 0.9;
+            }
+        }
+
+        .section-title {
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .item-title {
+            color: var(--text-secondary);
+        }
+
+        .item-meta {
+            color: var(--text-dim);
+        }
+
+        .terminal-image {
+            border: 1px solid var(--border);
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin: 0.3rem 0;
+            filter: brightness(0.8) contrast(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .terminal-image {
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .terminal-image {
+                height: 120px;
+            }
+        }
+
+        .ascii-border {
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            margin: 0.8rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .command-separator {
+            border-top: 1px solid var(--border);
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .command-separator::before {
+            content: '> ' attr(data-command) ' executed';
+            position: absolute;
+            top: -0.7rem;
+            left: 0;
+            background-color: var(--background);
+            padding: 0 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .link-icon {
+            display: inline-block;
+            margin: 0.2rem;
+            color: var(--text);
+            text-decoration: none;
+            border: 2px solid var(--accent1);
+            padding: 0.5rem 0.8rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, var(--background-secondary), var(--background));
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 255, 0, 0.1);
+            transition: all 0.3s ease;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .link-icon:hover {
+            background: linear-gradient(135deg, var(--accent1), var(--accent2));
+            color: var(--background);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 0, 0.3);
+            border-color: var(--text);
+        }
+
+        .ascii-title {
+            color: var(--text);
+            font-family: 'Courier New', 'Lucida Console', monospace;
+            white-space: pre;
+            font-size: 0.6rem;
+            line-height: 1;
+            margin: 0.8rem 0;
+            overflow: hidden;
+            letter-spacing: 0;
+            word-spacing: 0;
+            -webkit-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            font-variant-ligatures: none;
+            -webkit-font-feature-settings: "liga" 0;
+            font-feature-settings: "liga" 0;
+            transform: scale(1);
+        }
+
+        @media (max-width: 768px) {
+            .ascii-art {
+                font-size: 0.75rem;
+                transform: scale(0.9);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ascii-art {
+                font-size: 0.7rem;
+                transform: scale(0.8);
+            }
+        }
+
+        .sera-logo {
+            font-size: clamp(0.3rem, 2.5vw, 1rem);
+            line-height: 1;
+            white-space: pre;
+            overflow: hidden;
+            letter-spacing: 0;
+            word-spacing: 0;
+            transform-origin: center;
+            font-family: 'Courier New', 'Lucida Console', monospace !important;
+            -webkit-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            font-variant-ligatures: none;
+            -webkit-font-feature-settings: "liga" 0;
+            font-feature-settings: "liga" 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        @media (max-width: 768px) {
+            .sera-logo {
+                font-size: clamp(0.25rem, 2vw, 0.8rem);
+                transform: scale(0.95);
+            }
+            
+            #logo-display {
+                width: 95vw !important;
+                padding: 0 2.5vw;
+            }
+            
+            .ascii-title {
+                font-size: 0.5rem;
+                transform: scale(0.9);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sera-logo {
+                font-size: clamp(0.18rem, 1.6vw, 0.5rem);
+                transform: scale(0.85);
+            }
+            
+            #logo-display {
+                width: 98vw !important;
+                padding: 0 1vw;
+            }
+            
+            .ascii-title {
+                font-size: 0.4rem;
+                transform: scale(0.8);
+            }
+        }
+        
+        /* モバイル実機用の追加修正 */
+        @media screen and (max-device-width: 768px) {
+            .ascii-art, .ascii-title, .sera-logo {
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+                backface-visibility: hidden;
+                perspective: 1000;
+            }
+        }
+
+        /* モバイル最適化 */
+        @media (max-width: 768px) {
+            .content-screen {
+                padding: 1rem;
+                font-size: 0.95rem;
+                line-height: 1.1;
+            }
+            
+            header {
+                padding: 0.4rem 0.8rem;
+                flex-direction: row;
+                gap: 0.3rem;
+            }
+            
+            .header-title {
+                font-size: 0.9rem;
+            }
+            
+            .input-line {
+                padding: 0.4rem 0.8rem;
+                flex-wrap: nowrap;
+            }
+            
+            #command-input {
+                min-width: 0;
+                width: 100%;
+            }
+            
+            footer {
+                padding: 0.3rem 0.5rem;
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 0.2rem;
+            }
+            
+            #command-help {
+                display: none; /* モバイルではヘルプテキストを非表示 */
+            }
+            
+            .nav-button {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.8rem;
+                margin: 0.1rem;
+                min-width: auto;
+                flex: 0 0 auto;
+                border-radius: 4px;
+            }
+            
+            .ascii-art {
+                font-size: 0.75rem;
+                overflow-x: auto;
+            }
+            
+            .prompt::before {
+                content: 'guest@sera1250:~$';
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-screen {
+                padding: 0.6rem;
+                font-size: 0.9rem;
+            }
+            
+            header {
+                padding: 0.3rem 0.5rem;
+            }
+            
+            .header-title {
+                font-size: 0.8rem;
+            }
+            
+            .input-line {
+                padding: 0.3rem 0.5rem;
+            }
+            
+            footer {
+                padding: 0.2rem 0.3rem;
+            }
+            
+            .nav-button {
+                padding: 0.35rem 0.5rem;
+                font-size: 0.75rem;
+                margin: 0.05rem;
+                border-radius: 4px;
+            }
+            
+            .ascii-art {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* コマンドサジェスト */
+        .suggestion {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: var(--background-secondary);
+            border: 1px solid var(--accent1);
+            border-radius: 4px;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-family: inherit;
+            z-index: 1000;
+            white-space: nowrap;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        /* アクセシビリティ改善 */
+        .nav-button:focus,
+        #command-input:focus {
+            outline: 2px solid var(--text);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ハイコントラスト対応 */
+        @media (prefers-contrast: high) {
+            :root {
+                --text: #ffffff;
+                --background: #000000;
+                --border: #ffffff;
+            }
+        }
+
+        .matrix-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .panel {
+            border: 2px solid var(--accent1);
+            background: linear-gradient(135deg, var(--background-secondary), var(--background));
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 255, 0, 0.1);
+            position: relative;
+            pointer-events: auto; /* 確実にクリック可能にする */
+        }
+        
+        .panel * {
+            pointer-events: auto; /* パネル内のすべての子要素もクリック可能 */
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 6px;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 0, 0.1), transparent);
+            animation: panelGlow 2s ease-in-out infinite;
+            pointer-events: none; /* 重要: クリックイベントを通す */
+        }
+
+        @keyframes panelGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .creator-profile {
+            border: 1px solid var(--border);
+            background: var(--background-secondary);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .creator-profile:hover {
+            border-color: var(--accent1);
+            box-shadow: 0 2px 8px rgba(0, 255, 0, 0.2);
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        @media (min-width: 769px) {
+            .profiles-grid {
+                grid-template-columns: repeat(3, 1fr);
+                max-width: 100%;
+            }
+            
+            .creator-profile {
+                margin: 0;
+                height: 400px;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .creator-profile .item-meta {
+                flex-grow: 1;
+            }
+            
+            .creator-profile h3 {
+                font-size: 15px;
+                line-height: 1.3;
+            }
+            
+            .creator-profile .item-meta {
+                font-size: 13px;
+                line-height: 1.4;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profiles-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .creator-profile h3 {
+                font-size: 15px !important;
+                line-height: 1.3 !important;
+                font-weight: 500 !important;
+            }
+            
+            .creator-profile .item-meta {
+                font-size: 13px !important;
+                line-height: 1.4 !important;
+            }
+        }
+
+        .creator-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin: 0.5rem 0;
+        }
+
+        /* Easter Egg Effects */
+        .rainbow-mode {
+            animation: rainbow 2s infinite;
+        }
+
+        @keyframes rainbow {
+            0% { color: #ff0000; }
+            16% { color: #ff8000; }
+            33% { color: #ffff00; }
+            50% { color: #00ff00; }
+            66% { color: #0080ff; }
+            83% { color: #8000ff; }
+            100% { color: #ff0000; }
+        }
+
+        .glitch-mode {
+            animation: glitch 0.3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .neko-army {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9998;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .neko-item {
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            white-space: pre;
+            animation: bounce 1s infinite;
+            margin: 20px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="matrix-loader" class="matrix-container" style="display: none;">
+        <canvas id="q" style="position: absolute; top: 0; left: 0; z-index: 1;"></canvas>
+        <div id="logo-display" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; display: none; width: 90vw; max-width: 100vw;">
+            <div class="ascii-title sera-logo" style="color: #00FFFF; text-align: center;"></div>
+        </div>
+    </div>
+
+    <header class="flex justify-between items-center" role="banner">
+        <h1 class="header-title text-xl">SERA1250.EXE</h1>
+        <div class="flex items-center" role="status" aria-label="システム状態">
+            <span class="text-sm mr-2">Active:</span>
+            <div class="status-indicator" aria-hidden="true"></div>
+            <div class="dancing-dog dog-frame" aria-hidden="true">  /\_/\  
+ ( o.o ) ♪
+  > ^ <</div>
+        </div>
+    </header>
+
+    <main id="content-screen" class="content-screen" role="main" aria-live="polite" aria-label="メインコンテンツエリア">
+        <!-- コンテンツはここに表示されます -->
+    </main>
+    
+    <div class="input-line" role="search">
+        <label for="command-input" class="prompt-static" style="color: var(--prompt-color); font-weight: 400;">guest@sera1250:~$</label>
+        <div class="input-container ml-2" style="flex-grow: 1; position: relative;">
+            <input 
+                type="text" 
+                id="command-input" 
+                style="width: 100%;"
+                autocomplete="off"
+                aria-label="コマンド入力"
+                aria-describedby="command-help"
+                placeholder="type '/help' for commands"
+            >
+            <div id="input-cursor" class="cursor" aria-hidden="true"></div>
+        </div>
+    </div>
+
+    <footer class="flex justify-center space-x-4 flex-wrap" role="navigation" aria-label="ナビゲーション">
+        <span class="text-sm mb-2" id="command-help">コマンドショートカット:</span>
+        <button class="nav-button" data-command="/profile" aria-label="プロフィールを表示">/profile</button>
+        <button class="nav-button" data-command="/create" aria-label="クリエイト活動を表示">/create</button>
+        <button class="nav-button" data-command="/explore" aria-label="エクスプロール活動を表示">/explore</button>
+        <button class="nav-button" data-command="/clear" aria-label="画面をクリア">/clear</button>
+    </footer>
+
+    <script>
+        const contentScreen = document.getElementById('content-screen');
+        const commandInput = document.getElementById('command-input');
+        const inputCursor = document.getElementById('input-cursor');
+        const navButtons = document.querySelectorAll('.nav-button');
+
+        let autoScrollAnimation;
+        
+        // UX向上機能
+        let commandHistory = [];
+        let historyIndex = -1;
+        const availableCommands = ['/profile', '/create', '/explore', '/help', '/clear', '/rainbow', '/glitch', '/neko', '/owarai'];
+        let suggestionElement = null;
+
+        const explorerPortfolio = [
+            {
+                title: 'ChatNekoHacker: Real-Time Fan Engagement with Conversational Agents',
+                year: '2025',
+                description: 'AIエージェントがファンとリアルタイム対話する生配信システムを開発。インタラクティブな体験が、アーティストとファンのエンゲージメントを向上させることを確認。',
+                venue: 'GenAICHI 2025 (CHI2025)',
+                url: 'https://arxiv.org/abs/2504.13793',
+                ascii: `  ⠀⠀∧_∧
+ 　 ﾐ｡･ω･ﾐ
+💬～ﾐ_ｕu ﾐ\\`
+            },
+            {
+                title: 'Food Development through Co-creation with AI: bread with a "taste of love"',
+                year: '2024',
+                description: 'AIで恋愛番組の「恋心」を分析し、その感情をパンの味で表現する共創プロセスを研究。感情に訴える新しい食体験のデザイン手法を実証。',
+                venue: 'GenAICHI 2024 (CHI2024)',
+                url: 'https://arxiv.org/abs/2404.12760',
+                ascii: `  ⠀⠀∧_∧
+ 　 ﾐ｡･ω･ﾐ
+🍞～ﾐ_ｕu ﾐ\\`
+            },
+            {
+                title: '深層学習による歌詞を考慮したコード進行の自動生成',
+                year: '2022',
+                description: '歌詞の意味や雰囲気を反映したコード進行を、深層学習を用いて自動生成するモデルを提案。人間の感覚と乖離しない、新しい作曲支援技術の有効性を確認。',
+                venue: '情報処理学会全国大会',
+                url: 'https://jglobal.jst.go.jp/detail?JGLOBAL_ID=202202297906385249',
+                ascii: `  ⠀⠀∧_∧
+ 　 ﾐ｡･ω･ﾐ
+🎶～ﾐ_ｕu ﾐ\\`
+            },
+            {
+                title: 'A case study of Food Production Using Artificial Intelligence',
+                year: '2020',
+                description: 'AIで新聞記事から「その年のムード」を読み解き、味として表現するチョコレートを開発。AIが人間の創造性を刺激し、新たな商品開発を支援する可能性を確認。',
+                venue: 'Asian CHI Symposium 2020(CHI2020)',
+                url: 'https://dl.acm.org/doi/10.1145/3391203.3391211',
+                ascii: `  ⠀⠀∧_∧
+ 　 ﾐ｡･ω･ﾐ
+🍫～ﾐ_ｕu ﾐ\\`
+            }
+        ];
+
+        const creatorProfiles = [
+            {
+                name: 'Neko Hacker',
+                image: 'public/nekohacker-full.jpg',
+                description: 'Neko Hacker（ネコハッカー）、2018年活動開始。ギタリスト・トラックメイカーのSeraと作詞・メロディメイカーのかっさんの二人組ユニット。Kawaii Future Rockという独自のジャンルを開拓し、日本の音楽を世界へ広めるため活動している。',
+                links: [
+                    { name: '🌐 Website', url: 'https://nekohacker.com/' }
+                ]
+            },
+            {
+                name: 'FIELD OF FOREST',
+                image: 'public/fieldofforest.jpg',
+                description: '2012年大阪で結成。パワフルなバンドサウンドとキャッチーなメロディが織りなす楽曲は、激しいだけでなくどこか哀愁があり、独自の世界観へと引き込まれる。',
+                links: [
+                    { name: '🌐 Website', url: 'https://www.fieldofforest.com/' }
+                ]
+            },
+            {
+                name: 'Mergemelt',
+                image: 'public/mergemelt.jpg',
+                description: '✨たけなわなメタル✨',
+                links: [
+                    { name: '🌐 TuneCore', url: 'https://www.tunecore.co.jp/artists/mergemelt?lang=en' }
+                ]
+            },
+            {
+                name: 'OFUTONE',
+                image: 'public/ofutone.png',
+                description: '疲れているとき、大変なとき、あなたを優しく包み込むおふとんのような作品を生み出すクリエイター集団です。おふとんの中で見た夢を、私たちと一緒に叶えませんか？',
+                links: [
+                    { name: '🌐 Website', url: 'https://ofutone.com/' }
+                ]
+            }
+        ];
+        
+        const helpText = `
+            <p class="section-title">Available Commands:</p>
+            <p class="mb-2"><span class="item-title">/profile</span>    - Display profile</p>
+            <p class="mb-2"><span class="item-title">/create</span>     - Show create activities</p>
+            <p class="mb-2"><span class="item-title">/explore</span>    - Show explore activities</p>
+            <p class="mb-2"><span class="item-title">/help</span>       - Show this help message</p>
+            <p class="mb-2"><span class="item-title">/clear</span>      - Clear the screen</p>
+            <br>
+            <p class="section-title">Hidden Commands:</p>
+            <p class="mb-2"><span class="item-title">/rainbow</span>    - 🌈 Activate rainbow mode</p>
+            <p class="mb-2"><span class="item-title">/glitch</span>     - 👾 Enable glitch effect</p>
+            <p class="mb-2"><span class="item-title">/neko</span>       - 🐱 Summon the cat army</p>
+            <p class="mb-2"><span class="item-title">/owarai</span>     - 🎭 Show comedy career</p>
+            <br>
+            <p class="section-title">Keyboard Shortcuts:</p>
+            <p class="mb-1 item-meta">> <span class="item-title">↑/↓</span>     - Navigate command history</p>
+            <p class="mb-1 item-meta">> <span class="item-title">Tab</span>     - Auto-complete commands</p>
+            <p class="mb-1 item-meta">> <span class="item-title">Ctrl+L</span> - Clear screen</p>
+            <p class="mb-1 item-meta">> <span class="item-title">Ctrl+C</span> - Cancel current input</p>
+            <p class="mb-1 item-meta">> <span class="item-title">Esc</span>    - Clear input field</p>
+        `;
+
+        function typeWriter(element, text, speed = 0.02, callback) {
+            let i = 0;
+            const totalTime = 500; // 0.5秒で完了
+            const charsPerFrame = Math.max(1, Math.ceil(text.length / (totalTime / 16))); // 60fpsで計算
+            
+            function type() {
+                if (i < text.length) {
+                    const nextI = Math.min(i + charsPerFrame, text.length);
+                    element.innerHTML = text.substring(0, nextI);
+                    i = nextI;
+                    requestAnimationFrame(type);
+                } else if (callback) callback();
+            }
+            requestAnimationFrame(type);
+        }
+
+        function streamOutput(htmlContent, className = '') {
+            const div = document.createElement('div');
+            div.className = `fade-in ${className}`;
+            contentScreen.appendChild(div);
+            typeWriter(div, htmlContent, 0.1, () => {
+                scrollToBottom();
+            });
+            return div;
+        }
+
+        function scrollToBottom() {
+            contentScreen.scrollTop = contentScreen.scrollHeight;
+        }
+
+        function appendContent(htmlContent, className = '') {
+            const div = document.createElement('div');
+            div.className = `fade-in ${className}`;
+            div.innerHTML = htmlContent;
+            contentScreen.appendChild(div);
+            scrollToBottom();
+            return div;
+        }
+
+        function addCommandSeparator(commandName) {
+            const separator = document.createElement('div');
+            separator.className = 'command-separator';
+            separator.setAttribute('data-command', commandName);
+            contentScreen.appendChild(separator);
+        }
+        
+        function smoothScrollToBottom(duration) {
+            cancelAnimationFrame(autoScrollAnimation);
+            const screen = contentScreen;
+            const startY = screen.scrollTop;
+            const endY = screen.scrollHeight - screen.clientHeight;
+            const distance = endY - startY;
+            if (distance <= 0) return;
+
+            let startTime = null;
+
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                const progress = Math.min(timeElapsed / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 5);
+                
+                screen.scrollTop = startY + distance * ease;
+
+                if (timeElapsed < duration) {
+                    autoScrollAnimation = requestAnimationFrame(animation);
+                }
+            }
+            autoScrollAnimation = requestAnimationFrame(animation);
+        }
+
+        function stopAutoScroll() {
+            cancelAnimationFrame(autoScrollAnimation);
+        }
+        
+        contentScreen.addEventListener('wheel', stopAutoScroll, { passive: true });
+        contentScreen.addEventListener('mousedown', stopAutoScroll, { passive: true });
+        contentScreen.addEventListener('touchstart', stopAutoScroll, { passive: true });
+
+        // コマンド実行の重複防止
+        let isCommandRunning = false;
+        
+        function runCommand(command) {
+            if (!command || isCommandRunning) return;
+            
+            isCommandRunning = true;
+            stopAutoScroll();
+            
+            const promptHtml = `<div class="prompt">${command}</div>`;
+            appendContent(promptHtml, 'mb-2');
+            
+            // 自動スクロールを無効化してスムーズな表示を優先
+            setTimeout(() => {
+                scrollToBottom();
+            }, 100);
+            
+            // コマンド区切り線を追加
+            if (command.toLowerCase() !== '/clear' && command.toLowerCase() !== 'clear' && command.toLowerCase() !== '/help' && command.toLowerCase() !== 'help') {
+                addCommandSeparator(command.toLowerCase().replace('/', ''));
+            }
+
+            let output = '';
+            switch(command.toLowerCase()) {
+                case '/profile':
+                case 'profile':
+                    const profileAscii = `██████╗ ██████╗  ██████╗ ███████╗██╗██╗     ███████╗
+██╔══██╗██╔══██╗██╔═══██╗██╔════╝██║██║     ██╔════╝
+██████╔╝██████╔╝██║   ██║█████╗  ██║██║     █████╗  
+██╔═══╝ ██╔══██╗██║   ██║██╔══╝  ██║██║     ██╔══╝  
+██║     ██║  ██║╚██████╔╝██║     ██║███████╗███████╗
+╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚══════╝`;
+                    output = `
+                        <div class="panel">
+                            <div class="ascii-title">${profileAscii}</div>
+                            <div class="mb-4">
+                                <div class="mb-4">
+                                    <p class="mb-2">> <span class="item-title">name:</span> sera1250</p>
+                                    <p class="mb-2">> <span class="item-title">location:</span> Japan</p>
+                                    <p class="mb-2">> <span class="item-title">activity:</span> create & explore</p>
+                                    <p class="mb-4">> <span class="item-title">1993年生まれ、大阪府出身。大学院を修了した2018年からNeko Hackerとしての音楽活動と、データサイエンティストとしてのサラリーマン活動を開始。好きな食べ物はニンニク。</p>
+                                </div>
+                                
+                                <div class="ascii-border">═══════════════════════════════════════════════════</div>
+
+                                <div class="mb-4">
+                                    <p class="section-title">create：guitarist, trackmaker</p>
+                                    <p class="mb-4 item-meta">RPGのような物語性を核に据え、メタルをルーツとしたテクニカルなギターと、現代的なサウンドデザインを融合した音楽制作</p>
+                                </div>
+                                
+                                <div class="ascii-border">═══════════════════════════════════════════════════</div>
+                                
+                                <div class="mb-4">
+                                    <p class="section-title">explore：Human–Computer Interaction Researcher</p>
+                                    <p class="mb-4 item-meta">人間とAIの共創により、抽象的な概念を具体的な体験に変換し、人と人との繋がりを深める研究</p>
+                                </div>
+                                
+                                <div class="ascii-border">═══════════════════════════════════════════════════</div>
+                                
+                                <div class="mb-4">
+                                    <p class="section-title">social links</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <a href="https://x.com/sera1250" class="link-icon" target="_blank" rel="noopener">🐦 Twitter/X</a>
+                                        <a href="https://www.instagram.com/sera1250_/" class="link-icon" target="_blank" rel="noopener">📷 Instagram</a>
+                                        <a href="https://note.com/sera1250" class="link-icon" target="_blank" rel="noopener">📝 Note</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    streamOutput(output);
+                    break;
+                    
+                case '/create':
+                case 'create':
+                    const createAscii = ` ██████╗██████╗ ███████╗ █████╗ ████████╗███████╗
+██╔════╝██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██╔════╝
+██║     ██████╔╝█████╗  ███████║   ██║   █████╗  
+██║     ██╔══██╗██╔══╝  ██╔══██║   ██║   ██╔══╝  
+╚██████╗██║  ██║███████╗██║  ██║   ██║   ███████╗
+ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝`;
+                    output = `
+                        <div class="panel">
+                            <div class="ascii-title">${createAscii}</div>
+                            <div class="mb-4" data-section="create">
+                                <p class="mb-4 item-meta">> クリエイターとしての活動</p>
+                                
+                                <div class="profiles-grid">
+                                    ${creatorProfiles.map(profile => `
+                                        <div class="creator-profile">
+                                            <h3 class="item-title text-lg mb-2">${profile.name}</h3>
+                                            <img src="${profile.image}" alt="${profile.name}" class="creator-image">
+                                            <p class="item-meta mb-3">${profile.description}</p>
+                                            <div class="flex flex-wrap gap-2">
+                                                ${profile.links.map(link => `
+                                                    <a href="${link.url}" class="link-icon" target="_blank" rel="noopener">${link.name}</a>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    streamOutput(output);
+                    break;
+                    
+                case '/explore':
+                case 'explore':
+                    const exploreAscii = `███████╗██╗  ██╗██████╗ ██╗      ██████╗ ██████╗ ███████╗
+██╔════╝╚██╗██╔╝██╔══██╗██║     ██╔═══██╗██╔══██╗██╔════╝
+█████╗   ╚███╔╝ ██████╔╝██║     ██║   ██║██████╔╝█████╗  
+██╔══╝   ██╔██╗ ██╔═══╝ ██║     ██║   ██║██╔══██╗██╔══╝  
+███████╗██╔╝ ██╗██║     ███████╗╚██████╔╝██║  ██║███████╗
+╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝`;
+                    output = `
+                        <div class="panel">
+                            <div class="ascii-title">${exploreAscii}</div>
+                            <div class="mb-4" data-section="explore">
+                                <p class="mb-4 item-meta">> Human–Computer Interactionに関する研究</p>
+                                
+                                <div class="profiles-grid">
+                                    ${explorerPortfolio.map(item => `
+                                        <div class="creator-profile">
+                                            <h3 class="item-title text-lg mb-2">${item.title}</h3>
+                                            <pre class="ascii-art" style="color: var(--text); margin: 10px 0; font-size: 0.7rem;">${item.ascii}</pre>
+                                            <p class="mb-1 item-meta">${item.year} - ${item.venue}</p>
+                                            <p class="item-meta mb-2">${item.description}</p>
+                                            <div class="flex flex-wrap gap-2">
+                                                <a href="${item.url}" class="link-icon" target="_blank" rel="noopener">📄 Paper</a>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <p class="mb-3 item-title">research profile:</p>
+                                    <div class="grid grid-cols-1 gap-2">
+                                        <a href="https://www.semanticscholar.org/author/Takuya-Sera/2356400923" class="link-icon" target="_blank" rel="noopener">📄 Semantic Scholar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    streamOutput(output);
+                    break;
+                    
+                    
+                case '/help':
+                case 'help':
+                    streamOutput(helpText);
+                    break;
+                    
+                case '/clear':
+                case 'clear':
+                    contentScreen.innerHTML = '';
+                    break;
+                    
+                case '/rainbow':
+                case 'rainbow':
+                    toggleRainbowMode();
+                    output = `<p class="item-meta">🌈 Rainbow mode toggled!</p>`;
+                    appendContent(output);
+                    break;
+                    
+                case '/glitch':
+                case 'glitch':
+                    toggleGlitchMode();
+                    output = `<p class="item-meta">👾 Glitch effect activated!</p>`;
+                    appendContent(output);
+                    break;
+                    
+                case '/neko':
+                case 'neko':
+                    summonNekoArmy();
+                    output = `<p class="item-meta">🐱 The cats are coming...</p>`;
+                    appendContent(output);
+                    break;
+                    
+                case '/owarai':
+                case 'owarai':
+                    const owaraiAscii = ` ██████╗ ██╗    ██╗ █████╗ ██████╗  █████╗ ██╗
+██╔═══██╗██║    ██║██╔══██╗██╔══██╗██╔══██╗██║
+██║   ██║██║ █╗ ██║███████║██████╔╝███████║██║
+██║   ██║██║███╗██║██╔══██║██╔══██╗██╔══██║██║
+╚██████╔╝╚███╔███╔╝██║  ██║██║  ██║██║  ██║██║
+ ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝`;
+                    output = `
+                        <div class="panel">
+                            <div class="ascii-title">${owaraiAscii}</div>
+                            <div class="mb-4">
+                                <div class="mb-4">
+                                    <p class="mb-2">> <span class="item-title">コンビ名:</span> ネコハッカー</p>
+                                    <p class="mb-2">> <span class="item-title">結成:</span> 2018年</p>
+                                    <p class="mb-4">> <span class="item-title">活動:</span> お笑い芸人として活動</p>
+                                </div>
+                                
+                                <div class="ascii-border">═══════════════════════════════════════════════════</div>
+                                
+                                <div class="mb-4">
+                                    <p class="section-title">M-1グランプリ戦績</p>
+                                    <div class="creator-profile">
+                                        <img src="public/owarai.jpg" alt="お笑いコンビ" class="creator-image">
+                                        <div class="mb-3">
+                                            <p class="mb-1 item-meta">> <span class="item-title">2019年:</span> M-1グランプリ 一回戦敗退</p>
+                                            <p class="mb-1 item-meta">> <span class="item-title">2020年:</span> M-1グランプリ 一回戦敗退</p>
+                                            <p class="mb-1 item-meta">> <span class="item-title">2021年:</span> M-1グランプリ 一回戦敗退</p>
+                                            <p class="mb-1 item-meta">> <span class="item-title">2022年:</span> M-1グランプリ 一回戦敗退</p>
+                                            <p class="mb-1 item-meta">> <span class="item-title">2023年:</span> M-1グランプリ 一回戦敗退</p>
+                                            <p class="mb-1 item-meta">> <span class="item-title">2024年:</span> M-1グランプリ 不戦敗</p>
+                                        </div>
+                                        <p class="item-meta mb-3">2018年結成のお笑いコンビ。毎年M-1グランプリに挑戦し続ける不屈の精神力を持つ。2024年は不戦敗という新境地を開拓。</p>
+                                        <div class="ascii-art" style="color: var(--text); margin: 10px 0; font-size: 0.6rem; text-align: center;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    streamOutput(output);
+                    break;
+                    
+                default:
+                    output = `
+                        <p style="color: var(--accent1);">guest@sera1250:~$ ${command}</p>
+                        <p style="color: #ff4444;">bash: ${command}: command not found</p>
+                        <p class="item-meta">> Try '/help' to see available commands</p>
+                        <p class="item-meta">> Use Tab for auto-completion</p>
+                    `;
+                    appendContent(output);
+                    break;
+            }
+            setTimeout(scrollToBottom, 100);
+            
+            // 実行完了後にフラグをリセット
+            setTimeout(() => {
+                isCommandRunning = false;
+            }, 200);
+        }
+
+        // UX機能の実装
+        function showSuggestion(text) {
+            hideSuggestion();
+            if (text) {
+                suggestionElement = document.createElement('div');
+                suggestionElement.className = 'suggestion';
+                suggestionElement.textContent = `Tab to complete: ${text}`;
+                commandInput.parentElement.appendChild(suggestionElement);
+            }
+        }
+
+        function hideSuggestion() {
+            if (suggestionElement) {
+                suggestionElement.remove();
+                suggestionElement = null;
+            }
+        }
+
+        function getCommandSuggestion(input) {
+            if (!input) return null;
+            const matches = availableCommands.filter(cmd => 
+                cmd.toLowerCase().startsWith(input.toLowerCase()) && cmd !== input
+            );
+            return matches.length > 0 ? matches[0] : null;
+        }
+
+        function addToHistory(command) {
+            if (command && command.trim() !== '') {
+                commandHistory.unshift(command);
+                if (commandHistory.length > 20) { // 履歴は20件まで
+                    commandHistory.pop();
+                }
+                historyIndex = -1;
+            }
+        }
+
+        commandInput.addEventListener('input', (e) => {
+            const suggestion = getCommandSuggestion(e.target.value);
+            if (suggestion) {
+                showSuggestion(suggestion);
+            } else {
+                hideSuggestion();
+            }
+        });
+
+        commandInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const command = commandInput.value.trim();
+                if (command) {
+                    addToHistory(command);
+                    runCommand(command);
+                }
+                commandInput.value = '';
+                hideSuggestion();
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const suggestion = getCommandSuggestion(commandInput.value);
+                if (suggestion) {
+                    commandInput.value = suggestion;
+                    hideSuggestion();
+                } else {
+                    const buttons = Array.from(navButtons);
+                    const firstButton = buttons[0];
+                    if (firstButton) {
+                        firstButton.focus();
+                    }
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    commandInput.value = commandHistory[historyIndex];
+                }
+                hideSuggestion();
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    commandInput.value = commandHistory[historyIndex];
+                } else if (historyIndex === 0) {
+                    historyIndex = -1;
+                    commandInput.value = '';
+                }
+                hideSuggestion();
+            } else if (e.key === 'Escape') {
+                commandInput.value = '';
+                historyIndex = -1;
+                hideSuggestion();
+            } else if (e.ctrlKey) {
+                // Ctrl+L でクリア（ターミナル標準）
+                if (e.key === 'l') {
+                    e.preventDefault();
+                    runCommand('/clear');
+                    commandInput.value = '';
+                    hideSuggestion();
+                }
+                // Ctrl+C でコマンドキャンセル
+                else if (e.key === 'c') {
+                    e.preventDefault();
+                    commandInput.value = '';
+                    historyIndex = -1;
+                    hideSuggestion();
+                }
+            }
+        });
+
+        // キーボードナビゲーション改善（一時的に無効化）
+        // navButtons.forEach((button, index) => {
+        //     button.addEventListener('keydown', (e) => {
+        //         const buttons = Array.from(navButtons);
+        //         let newIndex = index;
+        //         
+        //         switch(e.key) {
+        //             case 'ArrowLeft':
+        //                 e.preventDefault();
+        //                 newIndex = index > 0 ? index - 1 : buttons.length - 1;
+        //                 buttons[newIndex].focus();
+        //                 break;
+        //             case 'ArrowRight':
+        //                 e.preventDefault();
+        //                 newIndex = index < buttons.length - 1 ? index + 1 : 0;
+        //                 buttons[newIndex].focus();
+        //                 break;
+        //             case 'Tab':
+        //                 if (e.shiftKey && index === 0) {
+        //                     e.preventDefault();
+        //                     commandInput.focus();
+        //                 }
+        //                 break;
+        //             case 'Escape':
+        //                 e.preventDefault();
+        //                 commandInput.focus();
+        //                 break;
+        //         }
+        //     });
+        // });
+        
+        commandInput.addEventListener('focus', () => inputCursor.style.display = 'inline-block');
+        commandInput.addEventListener('blur', () => inputCursor.style.display = 'none');
+
+
+        const bootSequence = [
+            "Initializing SERA1250.EXE...",
+            `
+
+ =============================================================
+ ███████╗███████╗██████╗  █████╗  ██╗██████╗ ███████╗ ██████╗ 
+ ██╔════╝██╔════╝██╔══██╗██╔══██╗███║╚════██╗██╔════╝██╔═████╗
+ ███████╗█████╗  ██████╔╝███████║╚██║ █████╔╝███████╗██║██╔██║
+ ╚════██║██╔══╝  ██╔══██╗██╔══██║ ██║██╔═══╝ ╚════██║████╔╝██║
+ ███████║███████╗██║  ██║██║  ██║ ██║███████╗███████║╚██████╔╝
+ ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═╝╚══════╝╚══════╝ ╚═════╝ 
+ =============================================================
+            `,
+            "Welcome to sera1250.",
+            "Type '/help' for commands or use Tab for completion."
+        ];
+        let bootIndex = 0;
+
+        function createMatrixEffect() {
+            const canvas = document.getElementById('q');
+            const width = (canvas.width = window.innerWidth);
+            const height = (canvas.height = window.innerHeight);
+
+            // 文字が完全に画面上部を通り過ぎるまでの時間を計算
+            const speed = height / (800 / 16); // 800msで画面を移動
+            const clearTime = 1200; // 文字が完全に消えるまでの時間
+            const columnCount = Math.floor(width / 10);
+            let letters = Array(columnCount).fill(height);
+            // 各列にランダムな遅延を追加（0-300msの範囲）
+            let delays = Array.from({length: columnCount}, () => Math.random() * 300);
+            let startTime = Date.now();
+            let isClearing = false;
+
+            const draw = () => {
+                const ctx = canvas.getContext("2d");
+                
+                if (isClearing) {
+                    // 最終的に真っ黒にする
+                    ctx.fillStyle = "rgba(0, 0, 0, 1)";
+                    ctx.fillRect(0, 0, width, height);
+                    return;
+                }
+                
+                ctx.fillStyle = "rgba(0, 0, 0, .15)";
+                ctx.fillRect(0, 0, width, height);
+                ctx.fillStyle = "#00FFFF";
+                ctx.font = "12px JetBrains Mono, monospace";
+
+                let allOffScreen = true;
+                const currentTime = Date.now() - startTime;
+                
+                letters.forEach((y, index) => {
+                    // 遅延時間が経過していない場合はスキップ
+                    if (currentTime < delays[index]) {
+                        allOffScreen = false;
+                        return;
+                    }
+                    
+                    if (y > -20) { // 文字がまだ画面内にある
+                        allOffScreen = false;
+                        let code = 0xfeff0021 + Math.random() * 93;
+                        let text = String.fromCharCode(code);
+                        let x = index * 10;
+                        ctx.fillText(text, x, y);
+                    }
+                    
+                    // 遅延時間を考慮してY位置を更新
+                    if (currentTime >= delays[index]) {
+                        letters[index] = y - speed;
+                    }
+                });
+                
+                // すべての文字が画面上部を通り過ぎたらクリアモードに
+                if (allOffScreen && !isClearing) {
+                    isClearing = true;
+                    setTimeout(() => {
+                        clearInterval(interval);
+                        showSeraLogo();
+                    }, 200); // 完全に消えるまで少し待つ
+                }
+            };
+            
+            const interval = setInterval(draw, 16);
+            
+            // フェイルセーフで最大時間で停止
+            setTimeout(() => {
+                if (!isClearing) {
+                    isClearing = true;
+                    clearInterval(interval);
+                    showSeraLogo();
+                }
+            }, clearTime);
+        }
+        
+        function showSeraLogo() {
+            const logoDisplay = document.getElementById('logo-display');
+            const logoElement = logoDisplay.querySelector('.ascii-title');
+            
+            const seraLogo = `
+ ███████╗███████╗██████╗  █████╗  ██╗██████╗ ███████╗ ██████╗ 
+ ██╔════╝██╔════╝██╔══██╗██╔══██╗███║╚════██╗██╔════╝██╔═████╗
+ ███████╗█████╗  ██████╔╝███████║╚██║ █████╔╝███████╗██║██╔██║
+ ╚════██║██╔══╝  ██╔══██╗██╔══██║ ██║██╔═══╝ ╚════██║████╔╝██║
+ ███████║███████╗██║  ██║██║  ██║ ██║███████╗███████║╚██████╔╝
+ ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═╝╚══════╝╚══════╝ ╚═════╝ `;
+            
+            logoElement.textContent = seraLogo;
+            logoDisplay.style.display = 'block';
+            
+            // フェードイン効果
+            logoDisplay.style.opacity = '0';
+            logoDisplay.style.transition = 'opacity 0.5s ease-in';
+            
+            setTimeout(() => {
+                logoDisplay.style.opacity = '1';
+            }, 50);
+            
+            // 1.5秒後にフェードアウト開始
+            setTimeout(() => {
+                logoDisplay.style.transition = 'opacity 0.5s ease-out';
+                logoDisplay.style.opacity = '0';
+            }, 1500);
+            
+            // 2秒後にメイン画面に遷移
+            setTimeout(() => {
+                const loader = document.getElementById('matrix-loader');
+                loader.style.display = 'none';
+                runBootSequence();
+            }, 2000);
+        }
+        
+        function showMatrixLoader() {
+            const loader = document.getElementById('matrix-loader');
+            loader.style.display = 'flex';
+            createMatrixEffect();
+        }
+
+        function runBootSequence() {
+            if (bootIndex < bootSequence.length) {
+                const p = document.createElement('p');
+                p.style.color = 'var(--text-secondary)';
+                
+                // sera1250のASCIIアートの場合は特別な処理
+                if (bootIndex === 1) { // sera1250のASCIIアート
+                    p.innerHTML = `<pre class="ascii-art" style="color: var(--text-secondary); font-size: 0.7rem; line-height: 1;">${bootSequence[bootIndex]}</pre>`;
+                } else {
+                    p.textContent = bootSequence[bootIndex];
+                }
+                
+                contentScreen.appendChild(p);
+                bootIndex++;
+                setTimeout(runBootSequence, bootIndex === 4 ? 800 : 400); // ASCIIアート後は少し長めの間隔
+            } else {
+                // ブートシーケンス完了後、プロンプトを表示してからプロフィールを実行
+                const promptDiv = document.createElement('div');
+                promptDiv.className = 'prompt';
+                promptDiv.textContent = '/profile';
+                contentScreen.appendChild(promptDiv);
+                
+                // runCommandを直接呼ばずに、プロフィール内容だけを表示
+                setTimeout(() => {
+                    const profileAscii = `██████╗ ██████╗  ██████╗ ███████╗██╗██╗     ███████╗
+██╔══██╗██╔══██╗██╔═══██╗██╔════╝██║██║     ██╔════╝
+██████╔╝██████╔╝██║   ██║█████╗  ██║██║     █████╗  
+██╔═══╝ ██╔══██╗██║   ██║██╔══╝  ██║██║     ██╔══╝  
+██║     ██║  ██║╚██████╔╝██║     ██║███████╗███████╗
+╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚══════╝`;
+                    const output = `
+                        <div class="panel">
+                            <div class="ascii-title">${profileAscii}</div>
+                            <div class="mb-4">
+                                <div class="mb-4">
+                                    <p class="mb-2">> <span class="item-title">name:</span> sera1250</p>
+                                    <p class="mb-2">> <span class="item-title">location:</span> Japan</p>
+                                    <p class="mb-2">> <span class="item-title">activity:</span> create & explore</p>
+                                    <p class="mb-4">> <span class="item-title">1993年生まれ、大阪府出身。大学院を修了した2018年からNeko Hackerとしての音楽活動と、データサイエンティストとしてのサラリーマン活動を開始。好きな食べ物はニンニク。</p>
+                                </div>
+                                
+                                <div class="ascii-border">═══════════════════════════════════════════════════</div>
+                                
+                                <div class="mb-4">
+                                    <p class="section-title">create：guitarist, trackmaker</p>
+                                    <p class="mb-4 item-meta">RPGのような物語性を核に据え、メタルをルーツとしたテクニカルなギターと、現代的なサウンドデザインを融合した音楽制作</p>
+                                </div>
+                                
+                                <div class="ascii-border">═══════════════════════════════════════════════════</div>
+                                
+                                <div class="mb-4">
+                                    <p class="section-title">explore：Human–Computer Interaction Researcher</p>
+                                    <p class="mb-4 item-meta">人間とAIの共創により、抽象的な概念を具体的な体験に変換し、人と人との繋がりを深める研究</p>
+                                </div>
+                                
+                                <div class="ascii-border">═══════════════════════════════════════════════════</div>
+                                
+                                <div class="mb-4">
+                                    <p class="section-title">social links</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <a href="https://x.com/sera1250" class="link-icon" target="_blank" rel="noopener">🐦 Twitter/X</a>
+                                        <a href="https://www.instagram.com/sera1250_/" class="link-icon" target="_blank" rel="noopener">📷 Instagram</a>
+                                        <a href="https://note.com/sera1250" class="link-icon" target="_blank" rel="noopener">📝 Note</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    streamOutput(output);
+                }, 200);
+            }
+        }
+        
+        window.onload = () => {
+            showMatrixLoader();
+            // 自動フォーカスを一時的に無効化（テスト用）
+            // if (!isMobile) {
+            //     commandInput.focus();
+            // }
+        };
+        
+        // 緊急修正: 完全に新しいイベント処理
+        
+        // 1. 既存のイベントリスナーをすべてクリア
+        const newNavButtons = document.querySelectorAll('.nav-button');
+        
+        // 2. 各ボタンに直接的なイベントハンドラーを設定
+        console.log('ボタン数:', newNavButtons.length);
+        
+        newNavButtons.forEach((button, index) => {
+            console.log(`ボタン${index}:`, button.dataset.command);
+            
+            // 既存のイベントリスナーをすべて削除
+            button.onclick = null;
+            button.removeAttribute('onclick');
+            
+            // 新しいイベントハンドラーを一つだけ設定
+            button.addEventListener('click', function(event) {
+                console.log('ボタンクリック:', this.dataset.command);
+                event.preventDefault();
+                event.stopPropagation();
+                
+                const command = this.dataset.command;
+                if (command) {
+                    runCommand(command);
+                }
+            }, { once: false }); // 毎回実行可能だが重複は防ぐ
+        });
+        
+        // 3. デバッグ用の追加テスト
+        
+        // DOMContentLoadedでの重複設定を削除（不要）
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     console.log('DOMContentLoaded: ボタン再確認');
+        //     const testButtons = document.querySelectorAll('.nav-button');
+        //     console.log('testButtons数:', testButtons.length);
+        //     
+        //     testButtons.forEach((btn, i) => {
+        //         console.log(`テストボタン${i}:`, btn.textContent, btn.dataset.command);
+        //         
+        //         // 最も基本的な方法
+        //         btn.setAttribute('onclick', `console.log('HTML onclick: ${btn.dataset.command}'); runCommand('${btn.dataset.command}'); return false;`);
+        //     });
+        // });
+        
+        // 4. 最終確認（スタイル設定のみ、イベント設定はしない）
+        setTimeout(() => {
+            console.log('setTimeout: 最終確認');
+            const finalButtons = document.querySelectorAll('.nav-button');
+            finalButtons.forEach(btn => {
+                btn.style.pointerEvents = 'auto';
+                btn.style.cursor = 'pointer';
+                console.log('ボタン有効化:', btn.dataset.command);
+            });
+        }, 2000);
+
+        // Easter Egg Functions
+        function toggleRainbowMode() {
+            document.body.classList.toggle('rainbow-mode');
+        }
+
+        let glitchInterval;
+        function toggleGlitchMode() {
+            document.body.classList.toggle('glitch-mode');
+            
+            if (document.body.classList.contains('glitch-mode')) {
+                const glitchChars = '!@#$%^&*(){}[]|\\:";\'<>?,./';
+                const originalTexts = new Map();
+                
+                glitchInterval = setInterval(() => {
+                    const textElements = document.querySelectorAll('p, span, h1, h2, h3');
+                    textElements.forEach(el => {
+                        if (!originalTexts.has(el)) {
+                            originalTexts.set(el, el.textContent);
+                        }
+                        
+                        if (Math.random() < 0.1) {
+                            let glitchedText = originalTexts.get(el);
+                            glitchedText = glitchedText.split('').map(char => 
+                                Math.random() < 0.1 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : char
+                            ).join('');
+                            el.textContent = glitchedText;
+                        } else {
+                            el.textContent = originalTexts.get(el);
+                        }
+                    });
+                }, 100);
+            } else {
+                if (glitchInterval) {
+                    clearInterval(glitchInterval);
+                    // テキストを元に戻す
+                    location.reload();
+                }
+            }
+        }
+
+        function summonNekoArmy() {
+            const nekoOverlay = document.createElement('div');
+            nekoOverlay.className = 'neko-army';
+            nekoOverlay.id = 'neko-overlay';
+            
+            const cats = [
+                `  /\\_/\\  \n ( o.o ) \n  > ^ <  `,
+                `  /\\_/\\  \n ( ^.^ ) \n  > ^ <  `,
+                `  /\\_/\\  \n ( -.- ) \n  > ^ <  `,
+                `  /\\_/\\  \n ( *_* ) \n  > ^ <  `,
+                `  /\\_/\\  \n ( @.@ ) \n  > ^ <  `,
+                `  /\\_/\\  \n ( >_< ) \n  > ^ <  `
+            ];
+            
+            for (let i = 0; i < 20; i++) {
+                const nekoItem = document.createElement('div');
+                nekoItem.className = 'neko-item';
+                nekoItem.textContent = cats[Math.floor(Math.random() * cats.length)];
+                nekoItem.style.animationDelay = `${Math.random() * 2}s`;
+                nekoOverlay.appendChild(nekoItem);
+            }
+            
+            // クリックで閉じる
+            nekoOverlay.addEventListener('click', () => {
+                nekoOverlay.remove();
+            });
+            
+            document.body.appendChild(nekoOverlay);
+            
+            // 10秒後に自動で閉じる
+            setTimeout(() => {
+                if (document.getElementById('neko-overlay')) {
+                    nekoOverlay.remove();
+                }
+            }, 10000);
+        }
+
+    </script>
+</body>
+</html>
